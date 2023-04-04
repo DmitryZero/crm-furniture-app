@@ -2,16 +2,78 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgres"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Cart {
+  idCart Int @id @default(autoincrement())
+}
+
+model Category {
+  categoryId        Int           @id @default(autoincrement())
+  elmaId            String        @db.VarChar(36)
+  categoryName      String        @db.VarChar(255)
+  products          Product[]
+  parentCategoryId  Int?
+  parentCategory    Category?   @relation("ParentCategory", fields: [parentCategoryId], references: [categoryId])
+  childCategory     Category[]   @relation("ParentCategory")
+}
+
+model Product {
+  idProduct         Int           @id @default(autoincrement())
+  category          Category      @relation(fields: [categoryId], references: [categoryId])
+  categoryId        Int
+  vendorCode        String        @db.VarChar(50)
+  productName       String        @db.VarChar(150)
+  description       String        @db.VarChar(10000)
+  weight            String        @db.VarChar(120)
+  size              String        @db.VarChar(120)
+  price             Int           
+}
+
+model Order {
+  orderId           Int           @id @default(autoincrement())
+  clientId          Int           
+  client            Client        @relation(fields: [clientId], references: [clientId])
+  managerId         Int
+  manager           Manager       @relation(fields: [managerId], references: [managerId])
+  deliveryDate      DateTime      @db.Date
+  summ              Int 
+}
+
+model Client {
+  clientId          Int           @id @default(autoincrement())
+  orders            Order[]
+  companyId         Int?  
+  fullName          String        @db.VarChar(120)
+  phone             String        @db.VarChar(25)
+  email             String        @db.VarChar(100)
+  clientInCompany   ClientInCompany[]
+}
+
+model Company {
+  companyId         Int           @id @default(autoincrement())       
+  clientInCompany   ClientInCompany[]    
+}
+
+model ClientInCompany {
+  clientId          Int
+  companyId         Int
+  client            Client        @relation(fields: [clientId], references: [clientId])
+  company           Company       @relation(fields: [companyId], references: [companyId])
+  
+  @@id([clientId, companyId])
+}
+
+model Manager {
+  managerId         Int           @id @default(autoincrement())
+  orders            Order[]
+  fullName          String        @db.VarChar(120)
+  phone             String        @db.VarChar(25)
+  email             String        @db.VarChar(100)
 }
