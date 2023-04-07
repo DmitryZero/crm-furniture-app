@@ -8,8 +8,6 @@ import { api } from "~/utils/api";
 import ProductCard from "~/components/ProductCard";
 
 const Home: NextPage = () => {
-  const { data: product } = api.products.getById.useQuery({ id: 1 });
-
   return (
     <>
       <Head>
@@ -24,7 +22,7 @@ const Home: NextPage = () => {
 
         <NavBar></NavBar>
         <div className="p-5 grid grid-cols-4 gap-4">
-          {!!product && <ProductCard {...product!} key={product?.productId}></ProductCard>}
+          123
         </div>
       </main>
     </>

@@ -16,7 +16,7 @@ model Cart {
 
 model Category {
   categoryId        Int           @id @default(autoincrement())
-  elmaId            String        @db.VarChar(36)
+  elmaId            String        @db.Uuid
   categoryName      String        @db.VarChar(255)
   products          Product[]
   parentCategoryId  Int?
@@ -25,7 +25,8 @@ model Category {
 }
 
 model Product {
-  idProduct         Int           @id @default(autoincrement())
+  productId         Int           @id @default(autoincrement())
+  elmaId            String        @db.Uuid
   category          Category      @relation(fields: [categoryId], references: [categoryId])
   categoryId        Int
   vendorCode        String        @db.VarChar(50)
@@ -33,11 +34,13 @@ model Product {
   description       String        @db.VarChar(10000)
   weight            String        @db.VarChar(120)
   size              String        @db.VarChar(120)
-  price             Int           
-}
+  price             Int         
+  productImg        String       
+} 
 
 model Order {
   orderId           Int           @id @default(autoincrement())
+  elmaId            String        @db.Uuid
   clientId          Int           
   client            Client        @relation(fields: [clientId], references: [clientId])
   managerId         Int
@@ -48,6 +51,7 @@ model Order {
 
 model Client {
   clientId          Int           @id @default(autoincrement())
+  elmaId            String        @db.Uuid
   orders            Order[]
   companyId         Int?  
   fullName          String        @db.VarChar(120)
@@ -57,7 +61,8 @@ model Client {
 }
 
 model Company {
-  companyId         Int           @id @default(autoincrement())       
+  companyId         Int           @id @default(autoincrement())  
+  elmaId            String        @db.Uuid     
   clientInCompany   ClientInCompany[]    
 }
 
@@ -72,6 +77,7 @@ model ClientInCompany {
 
 model Manager {
   managerId         Int           @id @default(autoincrement())
+  elmaId            String        @db.Uuid
   orders            Order[]
   fullName          String        @db.VarChar(120)
   phone             String        @db.VarChar(25)

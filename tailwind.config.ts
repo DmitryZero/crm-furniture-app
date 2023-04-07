@@ -6,7 +6,8 @@ export default {
     extend: {
       colors: {
         "primary": "#060606",
-        "secondary": "#FF5A00"
+        "secondary": "#FF5A00",
+        "tertiary": "#d4c047"
       },
       fontFamily: {
         'titillium-web': ['Titillium', 'sans-serif'],

@@ -1,16 +1,70 @@
-import React from 'react'
+import * as React from 'react';
+import Drawer from '@mui/material/Drawer';
+import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import MenuIcon from '@mui/icons-material/Menu';
 import { RouterOutputs } from '~/utils/api';
+import resolveConfig from "tailwindcss/resolveConfig";
+import tailwindConfig from '../../tailwind.config'
 
-type ProductType = RouterOutputs["product"]["getAll"][number];
-export default function SideModal() {
+type CategoryType = RouterOutputs["categories"]["getAll"];
 
+export default function TemporaryDrawer(categories: CategoryType = []) {
+    categories = Object.values(categories);
 
-    
+    const [state, setState] = React.useState({
+        left: false
+    });
+
+    const toggleDrawer =
+        (open: boolean) =>
+            (event: React.KeyboardEvent | React.MouseEvent) => {
+                if (
+                    event.type === 'keydown' &&
+                    ((event as React.KeyboardEvent).key === 'Tab' ||
+                        (event as React.KeyboardEvent).key === 'Shift')
+                ) {
+                    return;
+                }
+
+                setState({ ...state, left: open });
+            };
+
+    const content = () => {
+        return (
+            <>
+                {categories.map(category => {
+                    return (
+                        <div key={category.categoryId}>
+                            {category.categoryName}
+                        </div>
+                    )
+                })}
+            </>
+        )
+
+    };
+
+    const tertiary = (resolveConfig(tailwindConfig) as any).theme.colors.tertiary;
+
     return (
-        <div className='bg-slate-950/75 fixed inset-0'>
-            <div className='modal bg-slate-100 text-black w-1/4 h-full p-3'>
-                Магазин мебели
-            </div>
+        <div>
+            <Button onClick={toggleDrawer(true)}><MenuIcon></MenuIcon></Button>
+            <Drawer
+                anchor="left"
+                open={state.left}
+                onClose={toggleDrawer(false)}
+
+                PaperProps={{
+                    sx: {
+                        backgroundColor: tertiary,
+                        width: "35%",
+                        padding: "15px"
+                    }
+                }}
+            >
+                {content()}
+            </Drawer>
         </div>
-    )
+    );
 }
