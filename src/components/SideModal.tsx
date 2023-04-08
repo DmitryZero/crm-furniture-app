@@ -3,11 +3,11 @@ import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import MenuIcon from '@mui/icons-material/Menu';
-import { RouterOutputs } from '~/utils/api';
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from '../../tailwind.config'
+import type { Category } from '@prisma/client'
 
-type CategoryType = RouterOutputs["categories"]["getAll"];
+type CategoryType = Category;
 
 export default function TemporaryDrawer(categories: CategoryType = []) {
     categories = Object.values(categories);
